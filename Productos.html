@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Productos</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #4CAF50;
+        }
+        
+        .contenedor {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .lista-productos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .producto {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .producto:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .producto-imagen {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .producto-contenido {
+            padding: 20px;
+        }
+        
+        .producto-titulo {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .producto-precio {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+        
+        .producto-descripcion {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .producto-categoria {
+            display: inline-block;
+            background-color: #e0f7fa;
+            color: #00838f;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+        
+        .producto-stock {
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .stock-disponible {
+            color: #4CAF50;
+        }
+        
+        .stock-agotado {
+            color: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="contenedor">
+        <h1>Catálogo de Productos</h1>
+        <div class="lista-productos" id="listaProductos"></div>
+    </div>
+
+    <script>
+        // Objeto literal con 9 productos (cada uno con al menos 4 propiedades)
+        const productos = [
+            {
+                id: 1,
+                nombre: "Laptop Ultra Slim",
+                precio: 1299.99,
+                descripcion: "Laptop ultradelgada con pantalla Full HD de 15.6 pulgadas y 8GB de RAM.",
+                categoria: "Tecnología",
+                imagen: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                stock: 15,
+                marca: "TechMaster"
+            },
+            {
+                id: 2,
+                nombre: "Smartphone Pro",
+                precio: 899.99,
+                descripcion: "Teléfono inteligente con cámara triple de 48MP y batería de larga duración.",
+                categoria: "Tecnología",
+                imagen: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                stock: 0,
+                marca: "MobileX"
+            },
+            {
+                id: 3,
+                nombre: "Auriculares Inalámbricos",
+                precio: 149.99,
+                descripcion: "Auriculares con cancelación de ruido y 20 horas de autonomía.",
+                categoria: "Audio",
+                imagen: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                stock: 32,
+                marca: "SoundPlus"
+            },
+            {
+                id: 4,
+                nombre: "Reloj Inteligente",
+                precio: 249.99,
+                descripcion: "Monitoriza tu actividad física, sueño y notificaciones de tu smartphone.",
+                categoria: "Wearables",
+                imagen: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                stock: 8,
+                marca: "FitTech"
+            },
+            {
+                id: 5,
+                nombre: "Cámara Profesional",
+                precio: 1799.99,
+                descripcion: "Cámara DSLR con sensor de 24MP y grabación de video 4K.",
+                categoria: "Fotografía",
+                imagen: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                stock: 5,
+                marca: "PhotoPro"
+            },
+            {
+                id: 6,
+                nombre: "Altavoz Bluetooth",
+                precio: 119.99,
+                descripcion: "Altavoz portátil con sonido estéreo y resistencia al agua IPX7.",
+                categoria: "Audio",
+                imagen: "https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                stock: 21,
+                marca: "BoomSound"
+            },
+            {
+                id: 7,
+                nombre: "Tablet 10 pulgadas",
+                precio: 349.99,
+                descripcion: "Tablet con pantalla HD, 64GB de almacenamiento y soporte para lápiz óptico.",
+                categoria: "Tecnología",
+                imagen: "https://images.unsplash.com/photo-1546054454-aa26e2b734c7?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                stock: 12,
+                marca: "TabTech"
+            },
+            {
+                id: 8,
+                nombre: "Teclado Mecánico",
+                precio: 89.99,
+                descripcion: "Teclado para gaming con switches mecánicos y retroiluminación RGB.",
+                categoria: "Periféricos",
+                imagen: "https://m.media-amazon.com/images/I/61Q56A7UfNL._AC_SL1500_.jpg",
+                stock: 18,
+                marca: "KeyMaster"
+            },
+            {
+                id: 9,
+                nombre: "Monitor 27\" 4K",
+                precio: 399.99,
+                descripcion: "Monitor UHD con panel IPS y compatibilidad con HDR10.",
+                categoria: "Monitores",
+                imagen: "https://images.philips.com/is/image/philipsconsumer/faf6ce31f42f47baa7a5b01c00fc79e4?$pnglarge$&wid=1250",
+                stock: 7,
+                marca: "ViewPlus"
+            }
+        ];
+
+        // Función para renderizar los productos usando map()
+        function renderizarProductos() {
+            const contenedor = document.getElementById('listaProductos');
+            
+            // Usamos map para crear un array de strings HTML
+            const productosHTML = productos.map(producto => `
+                <div class="producto">
+                    <img src="${producto.imagen}" alt="${producto.nombre}" class="producto-imagen">
+                    <div class="producto-contenido">
+                        <h3 class="producto-titulo">${producto.nombre}</h3>
+                        <p class="producto-precio">$${producto.precio.toFixed(2)}</p>
+                        <p class="producto-descripcion">${producto.descripcion}</p>
+                        <span class="producto-categoria">${producto.categoria}</span>
+                        <p class="producto-stock ${producto.stock > 0 ? 'stock-disponible' : 'stock-agotado'}">
+                            ${producto.stock > 0 ? `Disponible: ${producto.stock} unidades` : 'AGOTADO'}
+                        </p>
+                    </div>
+                </div>
+            `).join('');
+            
+            contenedor.innerHTML = productosHTML;
+        }
+
+        // Llamamos a la función cuando se carga la página
+        window.onload = renderizarProductos;
+    </script>
+</body>
+</html>
